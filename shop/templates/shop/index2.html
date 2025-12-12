@@ -1,0 +1,140 @@
+{% extends 'shop/basic.html' %}
+
+{% block css %}
+.col-md-3 {
+  display: inline-block;
+  margin-left: -4px;
+}
+
+.card {
+  width: 18rem;
+  height: 30rem; /* fixed card height */
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  radius: 10px;
+  border:5px solid #da76ccff;
+}
+
+.card-text {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+.card-img-top {
+  height: 300px; /* fixed image height */
+  object-fit: cover; /* maintain proportion */
+  
+}
+
+.card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
+  background-color: #f8c9f6ff;
+}
+
+.carousel-inner {
+  text-align: center;
+  position: relative;
+}
+
+/* Hide dots */
+.carousel-indicators {
+  display: none;
+}
+
+/* Move arrows outside the image area */
+.carousel-control-prev,
+.carousel-control-next {
+  width: 5%;
+}
+
+.carousel-control-prev {
+  left: -60px;
+}
+
+.carousel-control-next {
+  right: -60px;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-color: rgba(0, 0, 0, 0.6);
+  background-size: 100%, 100%;
+  border-radius: 50%;
+  padding: 20px;
+}
+{% endblock %}
+
+{% block body %}
+{% load static %}
+
+<div class="container my-3">
+  
+
+  {% comment %} Loop through all product categories/slides {% endcomment %}
+  {% for product, range, nslides in allProds %}
+  <h1 class="text-center mb-4 ">{{ product.0.category }}</h1>
+  <div id="demo{{ forloop.counter }}" class="carousel slide mb-5" data-bs-ride="false">
+
+    <div class="carousel-inner">
+      <!-- First slide -->
+      <div class="carousel-item active">
+        <div class="row justify-content-center">
+          {% for p in product|slice:":4" %}
+          <div class="col-md-3">
+            <div class="card">
+              <img src="{{ p.image.url }}" class="card-img-top" alt="{{ p.product_name }}">
+              <div class="card-body">
+                <h5 class="card-title">{{ p.product_name }}</h5>
+                <p class="card-text">{{ p.desc|truncatechars:60 }}<br>{{ p.price }} Rs.<br>{{ p.pub_date }}</p>
+                <a href="#" class="btn btn-primary">Add to cart</a>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Second slide -->
+      {% if product|length > 4 %}
+      <div class="carousel-item">
+        <div class="row justify-content-center">
+          {% for p in product|slice:"4:" %}
+          <div class="col-md-3">
+            <div class="card">
+              <img src="{{ p.image.url }}" class="card-img-top" alt="{{ p.product_name }}">
+              <div class="card-body">
+                <h5 class="card-title">{{ p.product_name }}</h5>
+                <p class="card-text">{{ p.desc }}<br>{{ p.price }} Rs.<br>{{ p.pub_date }}</p>
+                <a href="#" class="btn btn-primary">Add to Cart</a>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Carousel Controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#demo{{ forloop.counter }}" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+
+    <button class="carousel-control-next" type="button" data-bs-target="#demo{{ forloop.counter }}" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock %}
